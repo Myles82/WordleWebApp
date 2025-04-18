@@ -11,7 +11,7 @@ export default function Home() {
   const [winMessage, setWinMessage] = useState('');
   const [loseMessage, setLoseMessage] = useState('');
 
-
+  // Shows message before fading out
   const showTemporaryMessage = (msg: string) => {
     setErrorMessage(msg);
     setShowError(true);
@@ -25,11 +25,7 @@ export default function Home() {
     }, 1500); // Fully hide after fade
   };
   
-  const showMessage = (msg: string) => {
-    setErrorMessage(msg);
-    setShowError(true);
-  };
-
+  // Fetches new word from api on refresh
   useEffect(() => {
     const fetchWord = async () => {
       const res = await fetch('/api/get-word');
@@ -40,6 +36,7 @@ export default function Home() {
     fetchWord();
   }, []);
   
+  // Virtual keyboard row symbols
   const keyboardRows = [
     'QWERTYUIOP'.split(''),
     'ASDFGHJKL'.split(''),
@@ -47,6 +44,7 @@ export default function Home() {
   ];
   const [usedKeys, setUsedKeys] = useState<{ [key: string]: string }>({});
 
+  // Gets full color string for blocks based on simple color string
   const getKeyColor = (letter: string) => {
     const color = usedKeys[letter];
     switch (color) {
@@ -61,6 +59,7 @@ export default function Home() {
     }
   };
   
+  // Shows virtual keyboard and updates colors
   const renderKeyboard = () => (
     <div className="mt-8 space-y-2">
       {keyboardRows.map((row, rIdx) => (
@@ -85,7 +84,7 @@ export default function Home() {
   
   const NUM_ROWS = 6;
   const WORD_LENGTH = 5;
-  const targetWord = 'PLANT';
+  
   
 
   const [rows, setRows] = useState<string[][]>(
@@ -96,6 +95,7 @@ export default function Home() {
   );
   const [currentRow, setCurrentRow] = useState(0);
 
+  // Directs keyboard input to handleKeyDown
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       handleKeyInput(e.key);
@@ -105,6 +105,7 @@ export default function Home() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [currentRow]);
 
+  // Call backend to check if word matches and is in dictionary
   const checkGuess = async (guess: string[]) => {
     const res = await fetch('/api/check-word', {
       method: 'POST',
@@ -113,20 +114,23 @@ export default function Home() {
     });
   
     const data = await res.json();
-  
+
+    // show message if word is not valid
     if (data.error) {
       showTemporaryMessage("Word not in Dictionary");
       return;
     }
   
     const resultColors = data.result;
-  
+    
+    // Sets colors of blocks for matches
     setColors((prev) => {
       const updated = [...prev];
       updated[currentRow] = resultColors;
       return updated;
     });
-  
+    
+    // Sets colors of virtual keyboard for used and matching letters
     setUsedKeys((prev) => {
       const updated = { ...prev };
       guess.forEach((letter, i) => {
@@ -148,7 +152,7 @@ export default function Home() {
       return;
     }
   
-    // Go to next row if not last
+    // Go to next row if not last and not game over
     if (currentRow < NUM_ROWS - 1) {
       setCurrentRow(currentRow + 1);
     } else {
@@ -158,7 +162,7 @@ export default function Home() {
   };
   
   
-
+  // Enables typing on virtual keyboard
   const handleKeyInput = (key: string) => {
     if (gameOver) return;
     key = key.toUpperCase();
@@ -183,7 +187,7 @@ export default function Home() {
     });
   };
   
-
+  // Gets full color string for virtual keyboard based on simple color string
   const getColorClass = (color: string) => {
     switch (color) {
       case 'green':
@@ -197,6 +201,7 @@ export default function Home() {
     }
   };
 
+  // Shows letter boxes
   const renderBoxes = (letters: string[], colorRow: string[], index: number) => {
     return (
       <div key={index} className="flex space-x-2 mb-2">
@@ -217,11 +222,16 @@ export default function Home() {
   };
   
   const [isVisible, setIsVisible] = useState(false);
+  // screen elements
   return (
     <div className="h-screen w-screen bg-black flex flex-col justify-center items-center space-y-1">
+      
+      {/* Show word toggle */}
       <div className="absolute top-4 left-4">
         <ToggleSwitch isOn={isVisible} setIsOn={setIsVisible} />
       </div>
+
+      {/* Not in dictionary Message */}
       {errorMessage && (
         <div
           className={`text-white bg-gray-700 px-4 py-2 rounded-md mb-10 -mt-20 transition-opacity duration-500 ${
@@ -231,12 +241,16 @@ export default function Home() {
           {errorMessage}
         </div>
       )}
+
+      {/* Win message */}
       {winMessage && (
         <div className="text-white bg-green-600 text-2xl mb-4 -mt-16 animate-bounce px-4 py-2 rounded-md  ${
                   ">
           {winMessage}
         </div>
       )}
+
+      {/* Lose message */}
       {loseMessage && (
         <div className="text-white bg-red-600 text-2xl mb-4 -mt-16 px-4 py-2 rounded-md  ${
                   ">
@@ -244,16 +258,21 @@ export default function Home() {
         </div>
       )}
 
-
+      {/* Title */}
       <h1 className="text-white space-x-2 text-6xl">Wordle</h1>
+
+      {/* Shown word when toggle on */}
       {isVisible && (
         <h1 className="text-4xl mb-4 text-white">
           Your Word: {word || 'Loading...'}
         </h1>
       )}      <div className={isVisible?"mt-6":"mt-20"}>
-     
+      
+      {/* Box grid */}
       <div className="flex flex-col w-screen space-x-2 space-y-1 justify-center items-center">
       {rows.map((row, index) => renderBoxes(row, colors[index], index))}
+
+      {/* Virtual keyboard */}
       {renderKeyboard()}
       </div>
       </div>

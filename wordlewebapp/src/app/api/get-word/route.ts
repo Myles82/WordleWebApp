@@ -3,18 +3,29 @@ import { cookies } from 'next/headers';
 
 
 export async function GET() {
-  const res = await fetch('https://random-word-api.vercel.app/api?words=1&length=5');
-  const data = await res.json();
-  const word = data[0].toUpperCase();
-
-  // Store securely in HttpOnly cookie (unreadable from JS)
+  
+  let validWord = '';
+  // Get random five letter word
+  do {
+    // Fetch from random word api
+    const res = await fetch('https://random-word-api.vercel.app/api?words=1&length=5');
+    const data = await res.json();
+    const word = data[0];
+    // Check random word is in dictionary api
+    const checkWord = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+    if (checkWord.ok) {
+      validWord = word.toUpperCase();
+    }
+    // If not in dictionary try again
+  } while (!validWord);
+  // Store in cookie 
   const cookieStore = await cookies();
-  cookieStore.set('targetWord', word, {
+  cookieStore.set('targetWord', validWord, {
     httpOnly: true,
     secure: true,
     path: '/',
     maxAge: 60 * 5, // 5 minutes
   });
 
-  return NextResponse.json({ word }); // don’t send the word!
+  return NextResponse.json({ word: validWord });
 }
