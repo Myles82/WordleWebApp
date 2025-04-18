@@ -1,10 +1,12 @@
-'use client'; // Required for components using useState in Next.js
+'use client';
+import React from 'react';
 
-import { useState } from 'react';
+type ToggleSwitchProps = {
+  isOn: boolean;
+  setIsOn: (value: boolean) => void;
+};
 
-export default function ToggleSwitch() {
-  const [isOn, setIsOn] = useState(false);
-
+export default function ToggleSwitch({ isOn, setIsOn }: ToggleSwitchProps) {
   return (
     <label className="flex items-center gap-2 cursor-pointer">
       <div className="relative">
@@ -14,14 +16,14 @@ export default function ToggleSwitch() {
           onChange={() => setIsOn(!isOn)}
           className="sr-only"
         />
-        <div className="block bg-gray-600 w-14 h-8 rounded-full"></div>
+       <div className={isOn ? 'bg-green-500 block w-14 h-8 rounded-md' : 'bg-gray-700 block w-14 h-8 rounded-md'}></div>
         <div
-          className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition ${
+          className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-md transition ${
             isOn ? 'translate-x-6' : ''
           }`}
         ></div>
       </div>
-      <span className="text-white">{isOn ? 'ON' : 'OFF'}</span>
+      <span className="text-white">Show Word</span>
     </label>
   );
 }

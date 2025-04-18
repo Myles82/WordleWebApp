@@ -166,15 +166,18 @@ export default function Home() {
     );
   };
   
-
+  const [isVisible, setIsVisible] = useState(false);
   return (
     <div className="h-screen w-screen bg-black flex flex-col justify-center items-center space-y-1">
       <div className="absolute top-4 left-4">
-        <ToggleSwitch />
+        <ToggleSwitch isOn={isVisible} setIsOn={setIsVisible} />
       </div>
       <h1 className="text-white space-x-2 text-6xl">Wordle</h1>
-      <h1 className="text-4xl mb-4">Your Word: {word || 'Loading...'}</h1>
-      <div className="mt-20">
+      {isVisible && (
+        <h1 className="text-4xl mb-4 text-white">
+          Your Word: {word || 'Loading...'}
+        </h1>
+      )}      <div className={isVisible?"mt-6":"mt-20"}>
      
       <div className="flex flex-col w-screen space-x-2 space-y-1 justify-center items-center">
       {rows.map((row, index) => renderBoxes(row, colors[index], index))}
