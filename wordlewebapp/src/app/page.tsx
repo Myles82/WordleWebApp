@@ -2,17 +2,32 @@
 import { useState, useEffect } from 'react';
 import ToggleSwitch from '../components/ToggleSwitch';
 
+
 export default function Home() {
   const [word, setWord] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showError, setShowError] = useState(false);
+
+
+  const showTemporaryMessage = (msg: string) => {
+    setErrorMessage(msg);
+    setShowError(true);
+  
+    setTimeout(() => {
+      setShowError(false);
+    }, 1000); // Start fade-out
+  
+    setTimeout(() => {
+      setErrorMessage('');
+    }, 1500); // Fully hide after fade
+  };
+  
+  
 
   useEffect(() => {
     const fetchWord = async () => {
       const res = await fetch('/api/get-word');
       const data = await res.json();
-      if (data.error === 'Invalid word') {
-  alert('That word isn’t in the dictionary!');
-  return;
-}
       setWord(data.word);
     };
 
@@ -94,7 +109,7 @@ export default function Home() {
     const data = await res.json();
   
     if (!res.ok || data.error) {
-      alert(data.error || 'Something went wrong.');
+      showTemporaryMessage('Word not in dictionary');
       return;
     }
   
@@ -193,6 +208,17 @@ export default function Home() {
       <div className="absolute top-4 left-4">
         <ToggleSwitch isOn={isVisible} setIsOn={setIsVisible} />
       </div>
+      {errorMessage && (
+        <div
+          className={`text-white bg-gray-700 px-4 py-2 rounded-md mb-10 -mt-20 transition-opacity duration-500 ${
+            showError ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          {errorMessage}
+        </div>
+      )}
+
+
       <h1 className="text-white space-x-2 text-6xl">Wordle</h1>
       {isVisible && (
         <h1 className="text-4xl mb-4 text-white">
