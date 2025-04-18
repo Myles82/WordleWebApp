@@ -7,6 +7,9 @@ export default function Home() {
   const [word, setWord] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [showError, setShowError] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
+  const [winMessage, setWinMessage] = useState('');
+  const [loseMessage, setLoseMessage] = useState('');
 
 
   const showTemporaryMessage = (msg: string) => {
@@ -22,7 +25,10 @@ export default function Home() {
     }, 1500); // Fully hide after fade
   };
   
-  
+  const showMessage = (msg: string) => {
+    setErrorMessage(msg);
+    setShowError(true);
+  };
 
   useEffect(() => {
     const fetchWord = async () => {
@@ -108,8 +114,8 @@ export default function Home() {
   
     const data = await res.json();
   
-    if (!res.ok || data.error) {
-      showTemporaryMessage('Word not in dictionary');
+    if (data.error) {
+      showTemporaryMessage("Word not in Dictionary");
       return;
     }
   
@@ -123,30 +129,38 @@ export default function Home() {
   
     setUsedKeys((prev) => {
       const updated = { ...prev };
-  
       guess.forEach((letter, i) => {
         const current = updated[letter];
         const next = resultColors[i];
   
         if (current === 'green') return;
-        if (current === 'yellow' && next === 'gray') return;
-        if (current === 'yellow' && next === 'yellow') return;
+        if (current === 'yellow' && next !== 'green') return;
   
         updated[letter] = next;
       });
-  
       return updated;
     });
-
+  
+    // Check for win
+    if (Array.isArray(resultColors) && resultColors.every((color) => color === 'green')) {
+      setWinMessage('🎉 You Win!');
+      setGameOver(true);
+      return;
+    }
+  
+    // Go to next row if not last
     if (currentRow < NUM_ROWS - 1) {
       setCurrentRow(currentRow + 1);
+    } else {
+      setGameOver(true);
+      setLoseMessage(`Game Over. The word was ${word}`);
     }
-    
-    
   };
+  
   
 
   const handleKeyInput = (key: string) => {
+    if (gameOver) return;
     key = key.toUpperCase();
   
     setRows((prevRows) => {
@@ -215,6 +229,18 @@ export default function Home() {
           }`}
         >
           {errorMessage}
+        </div>
+      )}
+      {winMessage && (
+        <div className="text-white bg-green-600 text-2xl mb-4 -mt-16 animate-bounce px-4 py-2 rounded-md  ${
+                  ">
+          {winMessage}
+        </div>
+      )}
+      {loseMessage && (
+        <div className="text-white bg-red-600 text-2xl mb-4 -mt-16 px-4 py-2 rounded-md  ${
+                  ">
+          {loseMessage}
         </div>
       )}
 
