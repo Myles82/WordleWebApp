@@ -9,6 +9,10 @@ export default function Home() {
     const fetchWord = async () => {
       const res = await fetch('/api/get-word');
       const data = await res.json();
+      if (data.error === 'Invalid word') {
+  alert('That word isn’t in the dictionary!');
+  return;
+}
       setWord(data.word);
     };
 
@@ -41,17 +45,21 @@ export default function Home() {
       {keyboardRows.map((row, rIdx) => (
         <div key={rIdx} className="flex justify-center space-x-1">
           {row.map((key) => (
-            <div
+            <button
               key={key}
-              className={`px-3 py-2 rounded text-sm border font-semibold ${getKeyColor(key)}`}
+              onClick={() => handleKeyInput(key)}
+              className={`px-3 py-2 rounded text-sm border font-semibold ${getKeyColor(
+                key
+              )} hover:bg-opacity-80 transition`}
             >
               {key}
-            </div>
+            </button>
           ))}
         </div>
       ))}
     </div>
   );
+  
 
   
   const NUM_ROWS = 6;
@@ -69,30 +77,9 @@ export default function Home() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      const key = e.key.toUpperCase();
-
-      setRows((prevRows) => {
-        const updatedRows = [...prevRows];
-        const row = [...updatedRows[currentRow]];
-
-        if (key === 'BACKSPACE') {
-          row.pop();
-        } else if (key === 'ENTER') {
-          if (row.length === WORD_LENGTH) {
-            checkGuess(row);
-            if (currentRow < NUM_ROWS - 1) {
-              setCurrentRow(currentRow + 1);
-            }
-          }
-        } else if (/^[A-Z]$/.test(key) && row.length < WORD_LENGTH) {
-          row.push(key);
-        }
-
-        updatedRows[currentRow] = row;
-        return updatedRows;
-      });
+      handleKeyInput(e.key);
     };
-
+  
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [currentRow]);
@@ -100,14 +87,17 @@ export default function Home() {
   const checkGuess = async (guess: string[]) => {
     const res = await fetch('/api/check-word', {
       method: 'POST',
-      body: JSON.stringify({
-        guess,
-        target: targetWord.split(''),
-      }),
+      body: JSON.stringify({ guess }),
       headers: { 'Content-Type': 'application/json' },
     });
   
     const data = await res.json();
+  
+    if (!res.ok || data.error) {
+      alert(data.error || 'Something went wrong.');
+      return;
+    }
+  
     const resultColors = data.result;
   
     setColors((prev) => {
@@ -115,24 +105,55 @@ export default function Home() {
       updated[currentRow] = resultColors;
       return updated;
     });
-
+  
     setUsedKeys((prev) => {
       const updated = { ...prev };
-    
+  
       guess.forEach((letter, i) => {
         const current = updated[letter];
         const next = resultColors[i];
-    
-        if (current === 'green') return; // don't downgrade
+  
+        if (current === 'green') return;
         if (current === 'yellow' && next === 'gray') return;
         if (current === 'yellow' && next === 'yellow') return;
-    
+  
         updated[letter] = next;
       });
-    
+  
       return updated;
     });
+
+    if (currentRow < NUM_ROWS - 1) {
+      setCurrentRow(currentRow + 1);
+    }
+    
+    
   };
+  
+
+  const handleKeyInput = (key: string) => {
+    key = key.toUpperCase();
+  
+    setRows((prevRows) => {
+      const updatedRows = [...prevRows];
+      const row = [...updatedRows[currentRow]];
+  
+      if (key === 'BACKSPACE' || key === '⌫') {
+        row.pop();
+      } else if (key === 'ENTER') {
+        if (row.length === WORD_LENGTH) {
+          checkGuess(row);
+          
+        }
+      } else if (/^[A-Z]$/.test(key) && row.length < WORD_LENGTH) {
+        row.push(key);
+      }
+  
+      updatedRows[currentRow] = row;
+      return updatedRows;
+    });
+  };
+  
 
   const getColorClass = (color: string) => {
     switch (color) {

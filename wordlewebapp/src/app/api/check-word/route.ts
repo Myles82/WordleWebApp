@@ -13,6 +13,12 @@ export async function POST(req: Request) {
   if (!target) {
     return new Response('No word set', { status: 400 });
   }
+  const word = guess.join('').toLowerCase();
+  const dictRes = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+  if (!dictRes.ok) {
+    return new Response(JSON.stringify({ error: 'Invalid word' }), { status: 400 });
+  }
+
   const result: string[] = Array(guess.length).fill('gray');
   const used = Array(target.length).fill(false);
   
