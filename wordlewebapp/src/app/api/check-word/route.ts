@@ -11,6 +11,7 @@ export async function POST(req: Request) {
   // Get target word from cookie
   const cookieStore = await cookies();
   const target = cookieStore.get('targetWord')?.value;
+  
 
   // Check if target word was retreived
   if (!target) {
@@ -28,14 +29,28 @@ export async function POST(req: Request) {
   const result: string[] = Array(guess.length).fill('gray');
   const used = Array(target.length).fill(false);
   
+  let numletters: { [key: string]: number } = {};
+  for (let i = 0; i < target.length; i++) {
+    if (target[i] in numletters){
+      numletters[target[i]] += 1
+    }
+    else{
+      numletters[target[i]] = 1
+    }
+  }
   // Check for hits and near hits and adjust color accordingly
   for (let i = 0; i < guess.length; i++) {
     if (guess[i] === target[i]) {
         result[i] = 'green';
+        numletters[guess[i]] -= 1
     }
-    else if(target.includes(guess[i])){
-        result[i] = 'yellow'; 
-    }
+  }
+  for (let i = 0; i < guess.length; i++) {
+    if(result[i]=='green'){ continue}
+    if(target.includes(guess[i])&&numletters[guess[i]]>0){
+      result[i] = 'yellow'; 
+      numletters[guess[i]] -= 1
+  }
   }
 
   
