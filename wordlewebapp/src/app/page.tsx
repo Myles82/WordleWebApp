@@ -254,7 +254,8 @@ export default function Home() {
         Letters change color to show how close you are.<br /><br />
         Green - Letter in word and in correct spot<br /><br />
         Yellow - Letter in word but not in correct spot<br /><br />
-        Grey - Letter not in the word
+        Grey - Letter not in the word<br /><br />
+        Refresh the page for a new word
       </p>
       <button
         className="mt-2 text-xs text-blue-500 hover:underline"
