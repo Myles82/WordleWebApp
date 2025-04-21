@@ -55,7 +55,7 @@ export default function Home() {
       case 'gray':
         return 'bg-gray-700 border-gray-700 text-white';
       default:
-        return ' border-gray-600 text-white';
+        return 'bg-gray-500 border-gray-700 text-white';
     }
   };
   
@@ -68,7 +68,7 @@ export default function Home() {
             <button
               key={key}
               onClick={() => handleKeyInput(key)}
-              className={`px-3 py-2 rounded text-sm border font-semibold ${getKeyColor(
+              className={` px-3 py-2 rounded text-sm border font-semibold ${getKeyColor(
                 key
               )} hover:bg-opacity-80 transition`}
             >

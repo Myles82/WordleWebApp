@@ -24,7 +24,6 @@ export async function GET() {
     httpOnly: true,
     secure: true,
     path: '/',
-    maxAge: 60 * 5, // 5 minutes
   });
 
   return NextResponse.json({ word: validWord });

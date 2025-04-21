@@ -22,6 +22,7 @@ export async function POST(req: Request) {
   const word = guess.join('').toLowerCase();
   const dictRes = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
   if (!dictRes.ok) {
+    console.log(dictRes.ok)
     return new Response(JSON.stringify({ error: 'Invalid word' }), { status: 400 });
   }
 
