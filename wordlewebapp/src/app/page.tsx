@@ -10,6 +10,8 @@ export default function Home() {
   const [gameOver, setGameOver] = useState(false);
   const [winMessage, setWinMessage] = useState('');
   const [loseMessage, setLoseMessage] = useState('');
+  const [showInfo, setShowInfo] = useState(false);
+
 
   // Shows message before fading out
   const showTemporaryMessage = (msg: string) => {
@@ -226,10 +228,46 @@ export default function Home() {
   return (
     <div className="h-screen w-screen bg-black flex flex-col justify-center items-center space-y-1">
       
+      <div className="flex flex-row">
       {/* Show word toggle */}
       <div className="absolute top-4 left-4">
         <ToggleSwitch isOn={isVisible} setIsOn={setIsVisible} />
       </div>
+
+      {/* Info Button and Bubble */}
+<div className="absolute top-4 right-4 z-50">
+  <button
+    onClick={() => setShowInfo(!showInfo)}
+    className="w-8 h-8 rounded-full bg-white text-black font-bold text-lg flex items-center justify-center shadow-md hover:bg-gray-200 transition"
+    title="Info"
+  >
+    i
+  </button>
+
+  {showInfo && (
+    <div className="absolute top-10 right-0 bg-white text-black text-sm p-4 rounded-lg shadow-xl w-64 z-50">
+      <p>
+        Welcome to <strong>Mordle</strong>!<br />
+        wordle with an M<br /><br />
+        Guess the word in 6 tries.<br />
+        Each guess must be a valid word.<br />
+        Letters change color to show how close you are.<br /><br />
+        Green - Letter in word and in correct spot<br /><br />
+        Yellow - Letter in word but not in correct spot<br /><br />
+        Grey - Letter not in the word
+      </p>
+      <button
+        className="mt-2 text-xs text-blue-500 hover:underline"
+        onClick={() => setShowInfo(false)}
+      >
+        Close
+      </button>
+    </div>
+  )}
+</div>
+
+      </div>
+
 
       {/* Not in dictionary Message */}
       {errorMessage && (
@@ -259,7 +297,7 @@ export default function Home() {
       )}
 
       {/* Title */}
-      <h1 className="text-white space-x-2 text-6xl">Wordle</h1>
+      <h1 className="text-white font-bold font-[Inter] space-x-2 text-6xl">Mordle</h1>
 
       {/* Shown word when toggle on */}
       {isVisible && (
