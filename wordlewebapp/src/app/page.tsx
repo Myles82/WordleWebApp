@@ -63,16 +63,23 @@ export default function Home() {
   
   // Shows virtual keyboard and updates colors
   const renderKeyboard = () => (
-    <div className="mt-4 sm:mt-6 md:mt-8 space-y-1 sm:space-y-2">
+    <div className="mt-8 space-y-2">
       {keyboardRows.map((row, rIdx) => (
         <div key={rIdx} className="flex justify-center space-x-1">
           {row.map((key) => (
             <button
               key={key}
               onClick={() => handleKeyInput(key)}
-              className={` px-2 py-1 sm:px-3 sm:py-2 rounded text-xs sm:text-sm border font-semibold ${getKeyColor(
-                key
-              )} hover:bg-opacity-80 transition`}
+              className={`
+                min-w-[35px]  // Minimum width for all keys
+                ${key.length > 1 ? 'min-w-[60px]' : ''}  // Wider minimum for special keys
+                px-3 py-2 sm:px-3 sm:py-2 
+                rounded text-xs sm:text-sm 
+                border font-semibold 
+                ${getKeyColor(key)}
+                hover:bg-opacity-80 transition
+                flex justify-center  // Ensure text stays centered
+              `}
             >
               {key}
             </button>
