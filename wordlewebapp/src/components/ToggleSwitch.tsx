@@ -34,7 +34,7 @@ export default function ToggleSwitch({ isOn, setIsOn }: ToggleSwitchProps) {
         ></div>
       </div>
       {/* Label */}
-      <span className="text-white text-sm sm:text-base">Show Word</span>
+      <span className="text-white text-sm sm:text-base"></span>
     </label>
   );
 }

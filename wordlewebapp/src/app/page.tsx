@@ -255,6 +255,7 @@ export default function Home() {
         Green - Letter in word and in correct spot<br /><br />
         Yellow - Letter in word but not in correct spot<br /><br />
         Grey - Letter not in the word<br /><br />
+        Use the switch on the left to reveal the current word<br />
         Refresh the page for a new word
       </p>
       <button
