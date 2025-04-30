@@ -55,9 +55,9 @@ export default function Home() {
       case 'yellow':
         return 'bg-yellow-500 border-yellow-500 text-black';
       case 'gray':
-        return 'bg-gray-700 border-gray-700 text-white';
+        return 'bg-[#4d4d4d] border-[#4d4d4d] text-white';
       default:
-        return 'bg-gray-500 border-gray-700 text-white';
+        return 'bg-[#909090] border-[#4d4d4d] text-white';
     }
   };
   
@@ -197,9 +197,9 @@ export default function Home() {
       case 'yellow':
         return 'bg-yellow-500 border-yellow-500';
       case 'gray':
-        return 'bg-gray-700 border-gray-700';
+        return 'bg-[#4d4d4d] border-[#4d4d4d] border-opacity-50';
       default:
-        return 'border-gray-500';
+        return 'border-[#4d4d4d] border-opacity-50';
     }
   };
 
@@ -273,7 +273,7 @@ export default function Home() {
       {/* Not in dictionary Message */}
       {errorMessage && (
         <div
-          className={`text-white bg-gray-700 px-4 py-2 rounded-md mb-10 -mt-20 transition-opacity duration-500 ${
+          className={`text-white bg-[#4d4d4d] px-4 py-2 rounded-md mb-10 -mt-20 transition-opacity duration-500 ${
             showError ? 'opacity-100' : 'opacity-0'
           }`}
         >

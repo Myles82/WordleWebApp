@@ -18,7 +18,7 @@ export default function ToggleSwitch({ isOn, setIsOn }: ToggleSwitchProps) {
           className="sr-only"
         />
         {/* Back rectangle */}
-       <div className={isOn ? 'bg-green-500 block w-14 h-8 rounded-md' : 'bg-gray-700 block w-14 h-8 rounded-md'}></div>
+       <div className={isOn ? 'bg-green-500 block w-14 h-8 rounded-md' : 'bg-[#4d4d4d] block w-14 h-8 rounded-md'}></div>
         {/* Square switch */}
         <div
           className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-md transition ${
