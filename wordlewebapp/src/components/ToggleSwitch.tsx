@@ -8,26 +8,33 @@ type ToggleSwitchProps = {
 
 export default function ToggleSwitch({ isOn, setIsOn }: ToggleSwitchProps) {
   return (
-    <label className="flex items-center gap-2 cursor-pointer">
+    <label className="flex items-center gap-2 cursor-pointer select-none">
       <div className="relative">
-        {/* Change isOn with switch */}
+        {/* Hidden checkbox */}
         <input
           type="checkbox"
           checked={isOn}
           onChange={() => setIsOn(!isOn)}
           className="sr-only"
+          aria-label="Toggle word visibility"
         />
-        {/* Back rectangle */}
-       <div className={isOn ? 'bg-green-500 block w-14 h-8 rounded-md' : 'bg-[#4d4d4d] block w-14 h-8 rounded-md'}></div>
-        {/* Square switch */}
+        {/* Track */}
+        <div className={`
+          block w-12 h-6 sm:w-14 sm:h-8 rounded-md transition-colors duration-200
+          ${isOn ? 'bg-green-600' : 'bg-[#4d4d4d]'}
+        `}></div>
+        {/* Thumb */}
         <div
-          className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-md transition ${
-            isOn ? 'translate-x-6' : ''
-          }`}
+          className={`
+            absolute top-0.5 left-0.5 sm:top-1 sm:left-1
+            bg-white w-5 h-5 sm:w-6 sm:h-6 rounded-md
+            transition-transform duration-200
+            ${isOn ? 'translate-x-6 sm:translate-x-6.25' : ''}
+          `}
         ></div>
       </div>
-      {/* Text */}
-      <span className="text-white">Show Word</span>
+      {/* Label */}
+      <span className="text-white text-sm sm:text-base">Show Word</span>
     </label>
   );
 }
