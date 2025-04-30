@@ -51,9 +51,9 @@ export default function Home() {
     const color = usedKeys[letter];
     switch (color) {
       case 'green':
-        return 'bg-green-500 border-green-500 text-white';
+        return 'bg-green-600 border-green-600 text-white';
       case 'yellow':
-        return 'bg-yellow-500 border-yellow-500 text-black';
+        return 'bg-yellow-600 border-yellow-600 text-white';
       case 'gray':
         return 'bg-[#4d4d4d] border-[#4d4d4d] text-white';
       default:
@@ -63,14 +63,14 @@ export default function Home() {
   
   // Shows virtual keyboard and updates colors
   const renderKeyboard = () => (
-    <div className="mt-8 space-y-2">
+    <div className="mt-4 sm:mt-6 md:mt-8 space-y-1 sm:space-y-2">
       {keyboardRows.map((row, rIdx) => (
         <div key={rIdx} className="flex justify-center space-x-1">
           {row.map((key) => (
             <button
               key={key}
               onClick={() => handleKeyInput(key)}
-              className={` px-3 py-2 rounded text-sm border font-semibold ${getKeyColor(
+              className={` px-2 py-1 sm:px-3 sm:py-2 rounded text-xs sm:text-sm border font-semibold ${getKeyColor(
                 key
               )} hover:bg-opacity-80 transition`}
             >
@@ -193,9 +193,9 @@ export default function Home() {
   const getColorClass = (color: string) => {
     switch (color) {
       case 'green':
-        return 'bg-green-500 border-green-500';
+        return 'bg-green-600 border-green-600';
       case 'yellow':
-        return 'bg-yellow-500 border-yellow-500';
+        return 'bg-yellow-600 border-yellow-600';
       case 'gray':
         return 'bg-[#4d4d4d] border-[#4d4d4d] border-opacity-50';
       default:
@@ -212,7 +212,7 @@ export default function Home() {
           .map((_, i) => (
             <div
               key={i}
-              className={`w-16 aspect-square text-white flex items-center justify-center rounded-md text-2xl border-2 ${getColorClass(
+               className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 text-white flex items-center justify-center rounded-md text-2xl border-2  ${getColorClass(
                 colorRow[i]
               )}`}
             >
@@ -226,7 +226,7 @@ export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
   // screen elements
   return (
-    <div className="h-screen w-screen bg-black flex flex-col justify-center items-center space-y-1">
+    <div className="min-h-screen bg-black flex flex-col items-center py-4 px-4">
       
       <div className="flex flex-row">
       {/* Show word toggle */}
@@ -273,7 +273,7 @@ export default function Home() {
       {/* Not in dictionary Message */}
       {errorMessage && (
         <div
-          className={`text-white bg-[#4d4d4d] px-4 py-2 rounded-md mb-10 -mt-20 transition-opacity duration-500 ${
+          className={`fixed top-1/9 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white bg-[#4d4d4d] px-4 py-2 rounded-md transition-opacity duration-500  ${
             showError ? 'opacity-100' : 'opacity-0'
           }`}
         >
@@ -283,7 +283,7 @@ export default function Home() {
 
       {/* Win message */}
       {winMessage && (
-        <div className="text-white bg-green-600 text-2xl mb-4 -mt-16 animate-bounce px-4 py-2 rounded-md  ${
+        <div className="fixed top-1/9 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white bg-green-600 text-xl sm:text-2xl mb-4 px-4 py-2 rounded-md animate-bounce   ${
                   ">
           {winMessage}
         </div>
@@ -291,14 +291,14 @@ export default function Home() {
 
       {/* Lose message */}
       {loseMessage && (
-        <div className="text-white bg-red-600 text-2xl mb-4 -mt-16 px-4 py-2 rounded-md  ${
+        <div className="fixed top-1/9 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white bg-red-600 text-xl sm:text-2xl mb-4 px-4 py-2 rounded-md   ${
                   ">
           {loseMessage}
         </div>
       )}
 
       {/* Title */}
-      <h1 className="text-white font-bold font-[Inter] space-x-2 text-6xl">Mordle</h1>
+      <h1 className="text-4xl sm:text-5xl md:text-6xl text-white font-bold font-[Inter]">Mordle</h1>
 
       {/* Shown word when toggle on */}
       {isVisible && (
